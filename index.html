@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>The Bobby</title>
+  <meta name="description" content="The Bobby">
+  <script src="js/aframe-master.min.js"></script>
+  <script src="js/aframe-gui.min.js"></script>
+  <script src="js/aframe-environment.min.js"></script>
+  <script src="js/aframe-animation-component.min.js"></script>
+  <script src="js/aframe-mouse-cursor-component.min.js"></script>
+
+  <script src="js/custom/script.js"></script>
+  <script src="js/custom/custom.js"></script>
+
+  <style type="text/css">
+    #video-permission {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: white;
+        z-index: 10000;
+        display: none;
+    }
+    #video-permission-button {
+      position: fixed;
+      top: calc(50% - 1em);
+      left: calc(50% - 60px);
+      width: 120px;
+      height: 2em;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <div id="video-permission">
+    <button id="video-permission-button">Allow VR video</button>
+  </div>
+
+
+  <a-scene background="color: #17202e" fog="type: linear; near:12; far:20; color: #dbdedb;">
+
+    <!-- Assets -->
+
+    <!-- Images-assets -->
+    <a-assets>
+      <img src="assets/img/1.jpg" alt="dark-room" id="1">
+      <img src="assets/img/2.jpg" alt="dark-room" id="2">
+      <img src="assets/img/3.jpg" alt="dark-room" id="3">
+      <img src="assets/img/4.jpg" alt="dark-room" id="4">
+      <img src="assets/img/5.jpg" alt="dark-room" id="5">
+      <img src="assets/img/6.jpg" alt="dark-room" id="6">
+      <img src="assets/img/7.jpg" alt="dark-room" id="7">
+      <img src="assets/img/8.jpg" alt="dark-room" id="8">
+      <img src="assets/img/9.jpg" alt="dark-room" id="9">
+      <img src="assets/img/10.png" alt="dark-room" id="10">
+
+
+      <img src="assets/img/video-pics/pause.png" alt="pause" id="pause">
+      <img src="assets/img/video-pics/play.png" alt="pause" id="play">
+      <img src="assets/img/video-pics/seek-back.png" alt="pause" id="seek-back">
+      <img src="assets/img/video-pics/volume-mute.png" alt="pause" id="mute">
+      <img src="assets/img/video-pics/volume-normal.png" alt="pause" id="volume-normal">
+    </a-assets>
+
+    <!-- Videos-assets -->
+    <a-assets>
+      <img src="assets/img/video-pics/white_grid_thin.png" id="grid" crossorigin="anonymous">
+      <video id="em" src="assets/vid/elon.mp4"></video>
+    </a-assets>
+
+    <!-- Light 1 -->
+    <a-entity>
+      <a-light position="0 0 9" rotation="0 0 90" color="#f38c24" type="directional" intensity="1"></a-light>
+    </a-entity>
+    <!-- Light 2 -->
+    <a-entity>
+      <a-light position="0 9 0" rotation="0 90 0" color="#556ff0" type="directional" intensity="1"></a-light>
+    </a-entity>
+    <!-- Light 3 -->
+    <a-entity>
+      <a-light position="9 0 0" rotation="90 0 0" color="#ff063d" type="directional" intensity="1"></a-light>
+    </a-entity>
+
+    <!-- Camera -->
+    <a-entity id="cameraRig" position="6 4 3">
+      <a-camera look-controls wasd-controls position="0 0 0">
+        <a-cursor fuse="true" fuseTimeout="1000" geometry="primitive: ring" material="color: white; shader: flat">
+          <a-animation begin="click" easing="ease-in" attribute="scale" fill="backwards" from="0.1 0.1 0.1" to="1 1 1">
+          </a-animation>
+          <a-animation begin="cursor-fusing" easing="ease-in" attribute="scale" fill="backwards" from="1 1 1"
+            to="0.1 0.1 0.1">
+          </a-animation>
+        </a-cursor>
+      </a-camera>
+    </a-entity>
+
+    <!-- Start Video Gallery -->
+    <a-entity id="video-gallery" scale="1 1 1">
+      <a-video id="video-screen" src="#em" width="3" scale="2.6 2.6 2.6" height="1.5" position="6 4 -5"></a-video>
+    </a-entity>
+
+    <!-- Start Music Gallery -->
+    <a-entity id="music-gallery"></a-entity>
+
+    <!-- Start Image Gallery -->
+    <a-entity id="image-gallery" scale="0 0 0">
+      <a-image src="#1" width="1" scale="2 2 2" rotation="0 90 0" height="0.75" position="2 2.3 -2"></a-image>
+      <a-image src="#2" width="1" scale="2 2 2" rotation="0 90 0" height="0.75" position="2 2.3 -5"></a-image>
+      <a-image src="#3" width="1" scale="2 2 2" rotation="0 90 0" height="0.75" position="2 2.3 -7"></a-image>
+      <a-image src="#4" width="1" scale="2 2 2" rotation="0 90 0" height="0.75" position="2 2.3 -9"></a-image>
+      <a-image src="#5" width="1" scale="2 2 2" rotation="0 90 0" height="0.75" position="2 2.3 -11"></a-image>
+      <a-image src="#6" width="1" scale="2 2 2" rotation="0 90 0" height="0.75" position="10 2.3 -2"></a-image>
+      <a-image src="#7" width="1" scale="2 2 2" rotation="0 90 0" height="0.75" position="10 2.3 -5"></a-image>
+      <a-image src="#8" width="1" scale="2 2 2" rotation="0 90 0" height="0.75" position="10 2.3 -7"></a-image>
+      <a-image src="#9" width="1" scale="2 2 2" rotation="0 90 0" height="0.75" position="10 2.3 -9"></a-image>
+      <a-image src="#10" width="1" scale="2 2 2" rotation="0 90 0" height="0.75" position="10 2.3 -11"></a-image>
+    </a-entity>
+
+
+    <!-- Controls -->
+    <a-image id="control-back" width="0.4" height="0.4" src="#seek-back" position="5 1.4 -5" visible="false"
+      scale="0.85 0.85 0.85"></a-image>
+    <a-image id="control-play" width="0.4" height="0.4" src="#play" position="6 1.4 -5"></a-image>
+    <a-image id="control-volume" width="0.4" height="0.4" src="#volume-normal" position="7 1.4 -5" visible="false"
+      scale="0.75 0.75 0.75"></a-image>
+
+    <!-- Progress Bar -->
+
+    <!-- color="black" -->
+    <a-entity id="progress-bar" geometry="primitive: plane; width: 4; height: 0.06;"
+      material="transparent: true; visible:false; opacity: 0;" position="6.5 0.6 -5">
+      <a-plane id="progress-bar-track" width="4" height="0.06" color="#FFF" position="0 0 0.005" opacity="0.2"
+        visible="false"></a-plane>
+      <a-plane id="progress-bar-fill" width="0" height="0.06" color="red" position="-2 0 0.01" visible="false">
+      </a-plane>
+    </a-entity>
+    <!-- color="#7198e5" -->
+
+    <!-- Environment -->
+    <a-entity id="env" environment="preset:starry; dressingAmount: 5000"></a-entity>
+
+    <!-- Sound -->
+    <!-- <a-sound src="assets/sound/music.mp3" loop="true" autoplay="true" position="-3 1 -4"></a-sound> -->
+
+    <!-- Menu -->
+    <a-gui-flex-container scale="0 0 0" id="menu" flex-direction="column" justify-content="center" align-items="normal"
+      component-padding="0.1" opacity="0.7" width="3.5" height="4.5" position="6 2.5 -4" panel-color="#5b0e87"
+      rotation="0 0 0">
+
+      <a-gui-button width="2.5" height="0.75" key-code="32" onclick="videoMode" value="Watch Videos" font-family="Arial"
+        margin="0 0 0.05 0">
+      </a-gui-button>
+
+      <a-gui-button width="2.5" height="0.75" key-code="32" onclick="musicMode" value="Play Music" font-family="Arial"
+        margin="0 0 0.05 0">
+      </a-gui-button>
+
+      <a-gui-button width="2.5" height="0.75" key-code="32" onclick="placesMode" value="Go Places" font-family="Arial"
+        margin="0 0 0.05 0">
+      </a-gui-button>
+    </a-gui-flex-container>
+  </a-scene>
+</body>
+
+</html>
