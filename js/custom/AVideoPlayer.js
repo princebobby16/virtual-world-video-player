@@ -1,8 +1,9 @@
-var VRVideoPlayer = function () {
+var AVideoPlayer = function () {
+
     // Vals
     this.duration = 0;
     this.current_progress = 0;
-    this.progressWidth = 4;
+    this.progressWidth = 0;
     this.paused = true;
 
     // Elems
@@ -23,38 +24,46 @@ var VRVideoPlayer = function () {
         this.elAlertSound = document.getElementById('alert-sound');
         this.elVideo = document.getElementById('video-src');
         this.elVideoScreen = document.getElementById('video-screen');
-        this.elControlBack = document.getElementById('control-back');
-        this.elControlPlay = document.getElementById('control-play');
-        this.elControlVolume = document.getElementById('control-volume');
+        this.elControlBack = document.getElementById('seek-back');
+        this.elControlPlay = document.getElementById('play');
+        this.elControlVolume = document.getElementById('volume-normal');
     }
 
-    this.setProgress = function (progress) {
-        /*if (this.progressWidth == undefined) {
-          this.progressWidth == 4;
-        }*/
-        var new_progress = this.progressWidth * progress;
-        this._setProgressWidth(new_progress);
-        var progress_coord = this._getProgressCoord();
-        if (progress_coord != undefined) {
-            progress_coord.x = -(this.progressWidth - new_progress) / 2;
-            this._setProgressCoord(progress_coord);
-        }
-    }
-    this._getProgressCoord = function () {
-        return AFRAME.utils.coordinates.parse(this.elProgressFill.getAttribute("position"))
-    }
-    this._getProgressWidth = function () {
-        return parseFloat(this.elProgressFill.getAttribute("width"));
-    }
-    this._setProgressCoord = function (coord) {
-        this.elProgressFill.setAttribute("position", coord);
-    }
-    this._setProgressWidth = function (width) {
-        this.elProgressFill.setAttribute("width", width);
-    }
+    /*this._determinateProgressWidth = function() {
+      this.progressWidth = this.elProgressBar.getAttribute('geometry').width;
+    }*/
 
-    // UI Setters
+    /**
+    * PROGRESS
+    */
+    // this.setProgress = function (progress) {
+    //     /*if (this.progressWidth == undefined) {
+    //       this.progressWidth == 4;
+    //     }*/
+    //     var new_progress = this.progressWidth * progress;
+    //     this._setProgressWidth(new_progress);
+    //     var progress_coord = this._getProgressCoord();
+    //     if (progress_coord != undefined) {
+    //         progress_coord.x = -(this.progressWidth - new_progress) / 2;
+    //         this._setProgressCoord(progress_coord);
+    //     }
+    // }
+    // this._getProgressCoord = function () {
+    //     return AFRAME.utils.coordinates.parse(this.elProgressFill.getAttribute("position"))
+    // }
+    // this._getProgressWidth = function () {
+    //     return parseFloat(this.elProgressFill.getAttribute("width"));
+    // }
+    // this._setProgressCoord = function (coord) {
+    //     this.elProgressFill.setAttribute("position", coord);
+    // }
+    // this._setProgressWidth = function (width) {
+    //     this.elProgressFill.setAttribute("width", width);
+    // }
 
+    /*
+    * UI SETTERS
+    */
     this.isProgressBarVisible = function (isVisible) {
         this.elProgressTrack.setAttribute("visible", isVisible);
         this.elProgressFill.setAttribute("visible", isVisible);
@@ -64,10 +73,9 @@ var VRVideoPlayer = function () {
         this.elControlVolume.setAttribute("visible", isVisible);
     }
 
-
     /*
-* EVENTS
-*/
+    * EVENTS
+    */
     this._addPlayerEvents = function () {
         var that = this;
         this.elVideo.pause();
@@ -134,11 +142,11 @@ var VRVideoPlayer = function () {
         });
     }
 
-    // this._playAudioAlert = function () {
-    //     if (this.elAlertSound.components !== undefined && this.elAlertSound.components.sound !== undefined) {
-    //         this.elAlertSound.components.sound.playSound();
-    //     }
-    // }
+    this._playAudioAlert = function () {
+        if (this.elAlertSound.components !== undefined && this.elAlertSound.components.sound !== undefined) {
+            this.elAlertSound.components.sound.playSound();
+        }
+    }
 
     /**
     * MOBILE PATCH TO PLAY VIDEO

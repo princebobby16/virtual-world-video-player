@@ -8,42 +8,14 @@
   <script src="js/aframe-master.min.js"></script>
   <script src="js/aframe-gui.min.js"></script>
   <script src="js/aframe-environment.min.js"></script>
-  <script src="js/aframe-animation-component.min.js"></script>
+  <!-- <script src="js/aframe-animation-component.min.js"></script> -->
   <script src="js/aframe-mouse-cursor-component.min.js"></script>
 
-  <script src="js/custom/script.js"></script>
-  <script src="js/custom/custom.js"></script>
-
-  <style type="text/css">
-    #video-permission {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: white;
-        z-index: 10000;
-        display: none;
-    }
-    #video-permission-button {
-      position: fixed;
-      top: calc(50% - 1em);
-      left: calc(50% - 60px);
-      width: 120px;
-      height: 2em;
-    }
-  </style>
 
 </head>
 
 <body>
-
-  <div id="video-permission">
-    <button id="video-permission-button">Allow VR video</button>
-  </div>
-
-
-  <a-scene background="color: #17202e" fog="type: linear; near:12; far:20; color: #dbdedb;">
+  <a-scene>
 
     <!-- Assets -->
 
@@ -61,17 +33,17 @@
       <img src="assets/img/10.png" alt="dark-room" id="10">
 
 
-      <img src="assets/img/video-pics/pause.png" alt="pause" id="pause">
-      <img src="assets/img/video-pics/play.png" alt="pause" id="play">
-      <img src="assets/img/video-pics/seek-back.png" alt="pause" id="seek-back">
-      <img src="assets/img/video-pics/volume-mute.png" alt="pause" id="mute">
-      <img src="assets/img/video-pics/volume-normal.png" alt="pause" id="volume-normal">
+      <img src="assets/img/video-pics/play.png" id="play" crossorigin="anonymous">
+      <img src="assets/img/video-pics/pause.png" id="pause" crossorigin="anonymous">
+      <img src="assets/img/video-pics/volume-normal.png" id="volume-normal" crossorigin="anonymous">
+      <img src="assets/img/video-pics/volume-mute.png" id="volume-mute" crossorigin="anonymous">
+      <img src="assets/img/video-pics/seek-back.png" id="seek-back" crossorigin="anonymous">
     </a-assets>
 
     <!-- Videos-assets -->
     <a-assets>
       <img src="assets/img/video-pics/white_grid_thin.png" id="grid" crossorigin="anonymous">
-      <video id="em" src="assets/vid/elon.mp4"></video>
+      <video id="video-src" src="assets/vid/interstellar.mp4"></video>
     </a-assets>
 
     <!-- Light 1 -->
@@ -89,7 +61,7 @@
 
     <!-- Camera -->
     <a-entity id="cameraRig" position="6 4 3">
-      <a-camera look-controls wasd-controls position="0 0 0">
+      <a-camera look-controls wasd-controls mouse-cursor position="0 0 0">
         <a-cursor fuse="true" fuseTimeout="1000" geometry="primitive: ring" material="color: white; shader: flat">
           <a-animation begin="click" easing="ease-in" attribute="scale" fill="backwards" from="0.1 0.1 0.1" to="1 1 1">
           </a-animation>
@@ -102,7 +74,9 @@
 
     <!-- Start Video Gallery -->
     <a-entity id="video-gallery" scale="1 1 1">
-      <a-video id="video-screen" src="#em" width="3" scale="2.6 2.6 2.6" height="1.5" position="6 4 -5"></a-video>
+      <a-sound id="alert-sound" src="src: url(assets/sound/action.wav)" autoplay="false" position="0 0 0"></a-sound>
+      <a-video id="video-screen" src="#video-src" width="3" scale="2.6 2.6 2.6" height="1.5" position="6 4 -5">
+      </a-video>
     </a-entity>
 
     <!-- Start Music Gallery -->
@@ -131,16 +105,13 @@
       scale="0.75 0.75 0.75"></a-image>
 
     <!-- Progress Bar -->
-
-    <!-- color="black" -->
     <a-entity id="progress-bar" geometry="primitive: plane; width: 4; height: 0.06;"
       material="transparent: true; visible:false; opacity: 0;" position="6.5 0.6 -5">
-      <a-plane id="progress-bar-track" width="4" height="0.06" color="#FFF" position="0 0 0.005" opacity="0.2"
+      <a-plane id="progress-bar-track" width="4" height="0.06" color="black" position="0 0 0.005" opacity="0.2"
         visible="false"></a-plane>
-      <a-plane id="progress-bar-fill" width="0" height="0.06" color="red" position="-2 0 0.01" visible="false">
+      <a-plane id="progress-bar-fill" width="0" height="0.06" color="#7198e5" position="-2 0 0.01" visible="false">
       </a-plane>
     </a-entity>
-    <!-- color="#7198e5" -->
 
     <!-- Environment -->
     <a-entity id="env" environment="preset:starry; dressingAmount: 5000"></a-entity>
@@ -166,6 +137,65 @@
       </a-gui-button>
     </a-gui-flex-container>
   </a-scene>
+
+  <script src="js/custom/AVideoPlayer.js"></script>
+
+
+  <script type="text/javascript">
+    window.videoMode = function () {
+      var curspt = document.getElementById("menu");
+      curspt.setAttribute("scale", "0 0 0");
+
+      var newspot = document.getElementById("video-gallery");
+      newspot.setAttribute("scale", "1 1 1");
+    }
+
+    window.musicMode = function (evt) {
+      var curspt = document.getElementById("menu");
+      curspt.setAttribute("scale", "0 0 0");
+    }
+
+    window.placesMode = function (evt) {
+      var curspt = document.getElementById("menu");
+      curspt.setAttribute("scale", "0 0 0");
+
+      var newspot = document.getElementById("image-gallery");
+      newspot.setAttribute("scale", "1 1 1");
+    }
+
+    let scene = document.querySelector("a-scene");
+    var cursor = document.querySelector("a-cursor");
+
+
+    var videoPlayer = new AVideoPlayer();
+
+
+    // Cursor
+    let hideCursor = function () {
+      cursor.removeAttribute('animation__cursorHideLeave');
+      cursor.setAttribute('animation__cursorHideEnter', "property: scale; from: 0.6 0.6 0.6; to: 0 0 0; dur: 300; easing: easeInQuad;");
+    }
+    let showCursor = function () {
+      console.log("video clicked")
+      cursor.removeAttribute('animation__cursorHideEnter');
+      cursor.setAttribute('animation__cursorHideLeave', "property: scale; from: 0 0 0; to: 0.6 0.6 0.6; dur: 300; easing: easeInQuad;");
+    }
+    var screen = document.querySelector('#video-screen');
+    screen.addEventListener('mouseenter', hideCursor);
+    screen.addEventListener('mouseleave', showCursor);
+
+    // Play Button Action
+    document.querySelector('#control-play').addEventListener('click', function () {
+      if (videoPlayer.paused) {
+        // scene.lightOn()
+        // showCursor();
+      } else {
+        // scene.lightOff();
+        hideCursor();
+      }
+    });
+  </script>
+
 </body>
 
 </html>
